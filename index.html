@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC - Drogaria Superfama</title>
+    <style>
+        :root {
+            --azul-principal: #0066cc;
+            --vermelho: #ff2a54;
+            --verde-whatsapp: #25D366;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-superfama {
+            width: 100%;
+            background: linear-gradient(135deg, #0066cc, #004b99);
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 620px;
+            padding: 0 15px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.08);
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+        }
+        .btn-calcular {
+            width: 100%;
+            background: var(--vermelho);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .numero { font-size: 3.2rem; font-weight: 800; color: var(--azul-principal); }
+        .badge-classificacao {
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            display: inline-block;
+            margin: 10px 0 15px 0;
+        }
+        .dicas-extras { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd; }
+        .whatsapp {
+            display: block;
+            background: var(--verde-whatsapp);
+            color: white;
+            text-align: center;
+            padding: 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 1.05rem;
+        }
+        @media (max-width: 480px) {
+            .card { padding: 24px 18px; }
+            .numero { font-size: 2.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-superfama">
+        <h1>⚖️ Calculadora de IMC</h1>
+        <p>Drogaria Superfama</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Informe seus dados</h2>
+            <label for="peso">Peso (kg)</label>
+            <input type="number" id="peso" step="0.1" placeholder="Ex: 70">
+
+            <label for="altura">Altura (m)</label>
+            <input type="number" id="altura" step="0.01" placeholder="Ex: 1.75" oninput="corrigirAltura(this)">
+
+            <button class="btn-calcular" onclick="calcularIMC()">CALCULAR IMC</button>
+        </div>
+
+        <div id="resultado" style="display:none;">
+            <div class="card">
+                <h2>Seu Resultado</h2>
+                <p>Seu IMC: <span id="imc" class="numero"></span></p>
+                <p>Classificação: <span id="classificacao" class="badge-classificacao"></span></p>
+                <p>Faixa de peso ideal: <strong id="pesoIdeal"></strong></p>
+                <p id="mensagem"></p>
+
+                <div class="dicas-extras">
+                    <p>💧 <strong>Água diária recomendada:</strong> <span id="aguaRecomendada"></span></p>
+                    <p>💊 <strong>Suplementação sugerida:</strong> <span id="suplementoRecomendado"></span></p>
+                    <p>🏃 <strong>Dica de saúde:</strong> <span id="dicaSaude"></span></p>
+                </div>
+
+                <a id="whatsapp" class="whatsapp" target="_blank" style="display:none;">
+                    💬 Falar com a Drogaria Superfama
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function corrigirAltura(input) {
+            let valor = parseFloat(input.value);
+            if (valor > 3) input.value = (valor / 100).toFixed(2);
+        }
+
+        function calcularIMC() {
+            let peso = parseFloat(document.getElementById("peso").value.replace(',', '.'));
+            let altura = parseFloat(document.getElementById("altura").value.replace(',', '.'));
+
+            if (!peso || !altura || peso <= 0 || altura <= 0) {
+                alert("Por favor, preencha peso e altura corretamente.");
+                return;
+            }
+
+            if (altura > 3) altura = altura / 100;
+
+            const imc = peso / (altura * altura);
+            const imcFormatado = imc.toFixed(1).replace('.', ',');
+
+            const pesoMin = (18.5 * altura * altura).toFixed(1).replace('.', ',');
+            const pesoMax = (24.9 * altura * altura).toFixed(1).replace('.', ',');
+            const agua = ((peso * 35) / 1000).toFixed(1).replace('.', ',');
+
+            let classificacao, cor, mensagem, whatsappTexto, suplemento, dica;
+
+            if (imc < 18.5) {
+                classificacao = "Abaixo do Peso";
+                cor = "#17a2b8";
+                mensagem = "Seu peso está abaixo do ideal.";
+                whatsappTexto = "Olá! Meu IMC deu *Abaixo do Peso*. Quero dicas para engordar de forma saudável.";
+                suplemento = "Hipercalóricos, Whey Protein, Complexo B";
+                dica = "Faça refeições a cada 3 horas e priorize alimentos densos nutricionalmente.";
+            } 
+            else if (imc < 25) {
+                classificacao = "Peso Adequado";
+                cor = "#28a745";
+                mensagem = "Parabéns! Você está com o peso ideal.";
+                whatsappTexto = "";
+                suplemento = "Multivitamínico e Ômega 3";
+                dica = "Continue mantendo bons hábitos de alimentação e exercício.";
+            } 
+            else if (imc < 30) {
+                classificacao = "Sobrepeso";
+                cor = "#ffc107";
+                mensagem = "Seu IMC indica sobrepeso.";
+                whatsappTexto = "Olá! Meu IMC deu *Sobrepeso*. Gostaria de dicas para emagrecer com saúde.";
+                suplemento = "Picolinato de Cromo, Psyllium, Termogênicos naturais";
+                dica = "Reduza açúcares e ultraprocessados. Aumente fibras e atividade física.";
+            } 
+            else {
+                classificacao = "Obesidade";
+                cor = "#dc3545";
+                mensagem = "Seu IMC indica obesidade.";
+                whatsappTexto = "Olá! Meu IMC deu *Obesidade*. Quero orientações para emagrecer de forma saudável.";
+                suplemento = "Quitosana, Fibras, Suplementos para queima de gordura";
+                dica = "Comece com metas pequenas e consulte um nutricionista.";
+            }
+
+            // Preenche resultados
+            document.getElementById("resultado").style.display = "block";
+            document.getElementById("imc").textContent = imcFormatado;
+            document.getElementById("classificacao").textContent = classificacao;
+            document.getElementById("classificacao").style.backgroundColor = cor;
+            document.getElementById("pesoIdeal").textContent = `${pesoMin} kg até ${pesoMax} kg`;
+            document.getElementById("mensagem").textContent = mensagem;
+            document.getElementById("aguaRecomendada").textContent = `${agua} litros`;
+            document.getElementById("suplementoRecomendado").textContent = suplemento;
+            document.getElementById("dicaSaude").textContent = dica;
+
+            // WhatsApp
+            const wa = document.getElementById("whatsapp");
+            if (whatsappTexto) {
+                wa.style.display = "block";
+                wa.href = `https://wa.me/556193166427?text=${encodeURIComponent(whatsappTexto)}`;
+            } else {
+                wa.style.display = "none";
+            }
+
+            document.getElementById("resultado").scrollIntoView({ behavior: "smooth" });
+        }
+    </script>
+</body>
+</html>
