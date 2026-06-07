@@ -70,7 +70,7 @@
         }
         .dicas-extras { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd; }
         .whatsapp {
-            display: block;
+            display: none; /* Começa escondido */
             background: var(--verde-whatsapp);
             color: white;
             text-align: center;
@@ -78,8 +78,13 @@
             border-radius: 10px;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 20px;
-            font-size: 1.05rem;
+            margin-top: 25px;
+            font-size: 1.08rem;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+        .whatsapp:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
         }
         @media (max-width: 480px) {
             .card { padding: 24px 18px; }
@@ -119,8 +124,8 @@
                     <p>🏃 <strong>Dica de saúde:</strong> <span id="dicaSaude"></span></p>
                 </div>
 
-                <a id="whatsapp" class="whatsapp" target="_blank" style="display:none;">
-                    💬 Falar com a Drogaria Superfama
+                <a id="whatsapp" class="whatsapp" target="_blank">
+                    💬 Falar com a Drogaria Superfama no WhatsApp
                 </a>
             </div>
         </div>
@@ -156,7 +161,7 @@
                 classificacao = "Abaixo do Peso";
                 cor = "#17a2b8";
                 mensagem = "Seu peso está abaixo do ideal.";
-                whatsappTexto = "Olá! Meu IMC deu *Abaixo do Peso*. Quero dicas para engordar de forma saudável.";
+                whatsappTexto = "Olá! Meu IMC deu *Abaixo do Peso*. Quero dicas para engordar de forma saudável com suplementos.";
                 suplemento = "Hipercalóricos, Whey Protein, Complexo B";
                 dica = "Faça refeições a cada 3 horas e priorize alimentos densos nutricionalmente.";
             } 
@@ -164,7 +169,7 @@
                 classificacao = "Peso Adequado";
                 cor = "#28a745";
                 mensagem = "Parabéns! Você está com o peso ideal.";
-                whatsappTexto = "";
+                whatsappTexto = ""; 
                 suplemento = "Multivitamínico e Ômega 3";
                 dica = "Continue mantendo bons hábitos de alimentação e exercício.";
             } 
@@ -185,7 +190,7 @@
                 dica = "Comece com metas pequenas e consulte um nutricionista.";
             }
 
-            // Preenche resultados
+            // Preenche os resultados
             document.getElementById("resultado").style.display = "block";
             document.getElementById("imc").textContent = imcFormatado;
             document.getElementById("classificacao").textContent = classificacao;
@@ -196,7 +201,7 @@
             document.getElementById("suplementoRecomendado").textContent = suplemento;
             document.getElementById("dicaSaude").textContent = dica;
 
-            // WhatsApp
+            // WhatsApp - CORRIGIDO
             const wa = document.getElementById("whatsapp");
             if (whatsappTexto) {
                 wa.style.display = "block";
