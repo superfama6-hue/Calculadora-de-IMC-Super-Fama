@@ -70,7 +70,7 @@
         }
         .dicas-extras { margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd; }
         .whatsapp {
-            display: none; /* Começa escondido */
+            display: none;
             background: var(--verde-whatsapp);
             color: white;
             text-align: center;
@@ -190,7 +190,7 @@
                 dica = "Comece com metas pequenas e consulte um nutricionista.";
             }
 
-            // Preenche os resultados
+            // Preenche resultados
             document.getElementById("resultado").style.display = "block";
             document.getElementById("imc").textContent = imcFormatado;
             document.getElementById("classificacao").textContent = classificacao;
@@ -201,7 +201,7 @@
             document.getElementById("suplementoRecomendado").textContent = suplemento;
             document.getElementById("dicaSaude").textContent = dica;
 
-            // WhatsApp - CORRIGIDO
+            // WhatsApp
             const wa = document.getElementById("whatsapp");
             if (whatsappTexto) {
                 wa.style.display = "block";
@@ -212,6 +212,15 @@
 
             document.getElementById("resultado").scrollIntoView({ behavior: "smooth" });
         }
+
+        // === ATIVAÇÃO COM TECLA ENTER (agora funcionando) ===
+        document.getElementById("peso").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") calcularIMC();
+        });
+
+        document.getElementById("altura").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") calcularIMC();
+        });
     </script>
 </body>
 </html>
